@@ -69,7 +69,7 @@ def simulator(input_file,output,thread):
     no_cols = len(starting_cellular[0])
 
     #temporary matrix for saving each steps simulation
-    temp_matix = np.empty([no_rows,no_cols],dtype=str)
+    temp_matrix = np.empty([no_rows,no_cols],dtype=str)
 
     #print status simulating
     print("Simulating...\n")
@@ -108,17 +108,21 @@ def simulator(input_file,output,thread):
 
                 if val == 'O':
                     if count_alive in [2,3,4]:
-                        temp_matix[i][j] = 'O'
+                        temp_matrix[i][j] = 'O'
                     else:
-                        temp_matix[i][j] = '.'
+                        temp_matrix[i][j] = '.'
                 elif val == '.':
                     if count_alive>0 and count_alive%2==0:
-                        temp_matix[i][j] = 'O'
+                        temp_matrix[i][j] = 'O'
                     else:
-                        temp_matix[i][j] = '.'
+                        temp_matrix[i][j] = '.'
 
         print("Time Step #%d" %(iteration+1))
-        print(matrix_to_string(temp_matix))
+        print(matrix_to_string(temp_matrix))
+        starting_cellular = temp_matrix.copy()
+
+    f = open(output,'w')
+    f.write(matrix_to_string(temp_matrix))
 
 #main function
 def main():
@@ -135,7 +139,7 @@ def main():
     output = args.output
     try:
         #create file
-        f = open(output, "x")
+        f = open(output, "w")
     except OSError as e:
         print(e)
         exit()
