@@ -54,9 +54,54 @@ def matrix_to_string(matrix):
 
     return s
 
+def simulation(starting_cellular,i,j):
+    val = starting_cellular[i][j]
+    next_val = ''
+
+    # total number of row and col in matrix
+    no_rows = len(starting_cellular)
+    no_cols = len(starting_cellular[0])
+
+    # finding neighors coordinates in matrix
+    row_down = (i + 1) % no_rows
+    col_right = (j + 1) % no_cols
+
+    if i - 1 < 0:
+        row_up = no_rows - 1
+    else:
+        row_up = i - 1 % no_rows
+
+    if j - 1 < 0:
+        col_left = no_cols - 1
+    else:
+        col_left = j - 1 % no_cols
+
+    neighbors_row = [row_up, i, row_down]
+    neighbors_col = [col_left, j, col_right]
+
+    count_alive = 0
+    for r in neighbors_row:
+        for c in neighbors_col:
+            if r == i and c == j:
+                continue
+            if starting_cellular[r][c] == 'O':
+                count_alive = count_alive + 1
+
+    if val == 'O':
+        if count_alive in [2, 3, 4]:
+            next_val = 'O'
+        else:
+            next_val= '.'
+    elif val == '.':
+        if count_alive > 0 and count_alive % 2 == 0:
+            next_val = 'O'
+        else:
+            next_val = '.'
+
+    return next_val
 
 #simulator function
-def simulator(input_file,output,thread):
+def start_simulator(input_file,output,thread):
     # print the project status
     print("Project :: R#\n")
     print("Reading imput from file %s \n" % args.input)
@@ -81,41 +126,7 @@ def simulator(input_file,output,thread):
     for iteration in range(100):
         for i in range(no_rows):
             for j,val in enumerate(starting_cellular[i]):
-                # finding neighors coordinates in matrix
-                row_down = (i + 1) % no_rows
-                col_right = (j + 1) % no_cols
-
-                if i - 1 < 0:
-                    row_up = no_rows-1
-                else:
-                    row_up = i - 1 % no_rows
-
-                if j - 1 < 0:
-                    col_left = no_cols-1
-                else:
-                    col_left = j - 1 % no_cols
-
-                neighbors_row = [row_up, i, row_down]
-                neighbors_col = [col_left, j, col_right]
-
-                count_alive = 0
-                for r in neighbors_row:
-                    for c in neighbors_col:
-                        if r == i and c == j:
-                            continue
-                        if starting_cellular[r][c] == 'O':
-                            count_alive = count_alive + 1
-
-                if val == 'O':
-                    if count_alive in [2,3,4]:
-                        temp_matrix[i][j] = 'O'
-                    else:
-                        temp_matrix[i][j] = '.'
-                elif val == '.':
-                    if count_alive>0 and count_alive%2==0:
-                        temp_matrix[i][j] = 'O'
-                    else:
-                        temp_matrix[i][j] = '.'
+                temp_matrix[i][j] = simulation(starting_cellular,i,j)
 
         print("Time Step #%d" %(iteration+1))
         print(matrix_to_string(temp_matrix))
@@ -145,7 +156,7 @@ def main():
         exit()
 
     #proceed if no error found
-    simulator(input_file,output,thread)
+    start_simulator(input_file,output,thread)
 
 if __name__== "__main__":
    main()
