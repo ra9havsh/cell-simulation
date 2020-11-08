@@ -3,7 +3,6 @@ from os import path
 import numpy as np
 import queue
 from threading import Thread
-import time
 
 
 #parsing and validation of argument from command line
@@ -148,7 +147,6 @@ def start_simulator():
     print("Time Step #0")
     print(input_file)
     print('\n')
-    start= time.time()
 
     # create thread
     for _ in range(thread):
@@ -170,9 +168,7 @@ def start_simulator():
         starting_cellular = temp_matrix.copy()
 
 
-    end = time.time()
     print("Simulation Complete")
-    print("simulation time : %f" %(end-start) )
     f = open(output,'w')
     f.write(matrix_to_string(temp_matrix))
     print('The final result is stored in output file %s' % output)
