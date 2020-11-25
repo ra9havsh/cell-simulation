@@ -1,6 +1,5 @@
 import argparse
 from os import path
-import numpy as np
 import queue
 from threading import Thread
 
@@ -53,7 +52,7 @@ def create_matrix(input_file):
     no_rows=len(read_input)
     no_cols=len(read_input[0])
 
-    matrix = np.empty([no_rows,no_cols],dtype=str)
+    matrix = [['' for _ in range(no_cols)] for _ in range(no_rows)]
     i=0
     for line in read_input:
         j=0
@@ -72,7 +71,7 @@ no_rows = len(starting_cellular)
 no_cols = len(starting_cellular[0])
 
 #temporary matrix for saving each steps simulation
-temp_matrix = np.empty([no_rows,no_cols],dtype=str)
+temp_matrix = [['' for _ in range(no_cols)] for _ in range(no_rows)]
 
 
 # convert matrix to string
@@ -166,11 +165,11 @@ def start_simulator():
         print("Time Step #%d" %(iteration+1))
         print(matrix_to_string(temp_matrix))
         starting_cellular = temp_matrix.copy()
-
+        temp_matrix = [['' for _ in range(no_cols)] for _ in range(no_rows)]
 
     print("Simulation Complete")
     f = open(output,'w')
-    f.write(matrix_to_string(temp_matrix))
+    f.write(matrix_to_string(starting_cellular))
     print('The final result is stored in output file %s' % output)
 
 #proceed if no error found
